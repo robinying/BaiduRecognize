@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1296DB</color>
+    <color name="colorPrimaryDark">#1296DB</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="button_big_text_color">#ffededed</color>
+    <color name="ripple_bg_white">#ffc6c4c4</color>
+    <color name="button_bg_press_color">#1296DB</color>
+    <color name="button_bg_color">#1296DB</color>
+</resources>
