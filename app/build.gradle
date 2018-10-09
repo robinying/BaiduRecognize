@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
-
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
 android {
     compileSdkVersion 25
     defaultConfig {
@@ -10,11 +12,44 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            keyAlias 'yubinKey'
+            keyPassword 'yubin0901'
+            storeFile file('../yubinKey.jks')
+            storePassword 'yubin0901'
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+//            applicationIdSuffix ".debug"
         }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+//            applicationIdSuffix ".debug"
+        }
+    }
+    applicationVariants.all { variant ->
+
+        variant.outputs.each { output ->
+
+            def outputFile = output.outputFile
+            if (outputFile != null) {
+                def fileName = "Recog_v${defaultConfig.versionName}_${variant.buildType.name}_${releaseTime()}.apk"
+                output.outputFileName = new File('', fileName)
+            }
+
+        }
+
     }
     sourceSets {
         main {

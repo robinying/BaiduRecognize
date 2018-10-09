@@ -1,6 +1,10 @@
 package com.yubin.recognize;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.model.IDCardParams;
@@ -21,6 +26,7 @@ import com.yanzhenjie.permission.RationaleListener;
 import com.yubin.ocrlibrary.ocr.ui.camera.CameraActivity;
 import com.yubin.recognize.activity.BaiduRecogMainActivity;
 import com.yubin.recognize.service.RecognizeService;
+import com.yubin.recognize.tts.SaveFileActivity;
 import com.yubin.recognize.tts.TtsActivity;
 import com.yubin.recognize.utils.DialogHelper;
 import com.yubin.recognize.utils.FileUtil;
@@ -53,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     Button button8;
     @BindView(R.id.button9)
     Button button9;
+    @BindView(R.id.button10)
+    Button button10;
     private MainActivity activityInstance;
     private String[] permissionArray = {
             Manifest.permission.CAMERA,
@@ -70,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_QRCODE = 25;
     private static final int REQUEST_CODE_ZXING_QRCODE = 26;
     private static final int REQUEST_CODE_ZXING_PIC_QRCODE = 27;
+    private ClipboardManager cm;
 
 
     @Override
@@ -81,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         activityInstance = this;
         checkPermissions();
         button5.setVisibility(View.GONE);
+        cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
     @Override
@@ -138,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6, R.id.button7,R.id.button8,R.id.button9})
+    @OnClick({R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6, R.id.button7, R.id.button8, R.id.button9,R.id.button10})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.button1:
@@ -208,6 +218,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent ttsintent = new Intent(activityInstance, TtsActivity.class);
                 startActivity(ttsintent);
                 break;
+            case R.id.button10:
+                Intent saveintent = new Intent(activityInstance, SaveFileActivity.class);
+                startActivity(saveintent);
+                break;
         }
     }
 
@@ -219,35 +233,85 @@ public class MainActivity extends AppCompatActivity {
                     new RecognizeService.ServiceListener() {
                         @Override
                         public void onResult(String result) {
-                            DialogHelper.getMessageDialog(activityInstance, result).show();
+                            final String text = result;
+                            DialogHelper.getConfirmDialog(activityInstance, result, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //创建ClipData对象
+                                    ClipData clipData = ClipData.newPlainText("text copy", text);
+                                    //添加ClipData对象到剪切板中
+                                    cm.setPrimaryClip(clipData);
+                                    Toast.makeText(activityInstance,R.string.copy_text,Toast.LENGTH_SHORT).show();
+                                }
+                            }).show();
                         }
                     });
         } else if (requestCode == REQUEST_CODE_ACCURATE_BASIC && resultCode == RESULT_OK) {
             RecognizeService.recAccurateBasic(activityInstance, FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), new RecognizeService.ServiceListener() {
                 @Override
                 public void onResult(String result) {
-                    DialogHelper.getMessageDialog(activityInstance, result).show();
+                    final String text = result;
+                    DialogHelper.getConfirmDialog(activityInstance, result, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //创建ClipData对象
+                            ClipData clipData = ClipData.newPlainText("text copy", text);
+                            //添加ClipData对象到剪切板中
+                            cm.setPrimaryClip(clipData);
+                            Toast.makeText(activityInstance,R.string.copy_text,Toast.LENGTH_SHORT).show();
+                        }
+                    }).show();
                 }
             });
         } else if (requestCode == REQUEST_CODE_FRONT_IDCARD && resultCode == RESULT_OK) {
             RecognizeService.recognizeIDCard(activityInstance, FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), IDCardParams.ID_CARD_SIDE_FRONT, new RecognizeService.ServiceListener() {
                 @Override
                 public void onResult(String result) {
-                    DialogHelper.getMessageDialog(activityInstance, result).show();
+                    final String text = result;
+                    DialogHelper.getConfirmDialog(activityInstance, result, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //创建ClipData对象
+                            ClipData clipData = ClipData.newPlainText("text copy", text);
+                            //添加ClipData对象到剪切板中
+                            cm.setPrimaryClip(clipData);
+                            Toast.makeText(activityInstance,R.string.copy_text,Toast.LENGTH_SHORT).show();
+                        }
+                    }).show();
                 }
             });
         } else if (requestCode == REQUEST_CODE_BACK_IDCARD && resultCode == RESULT_OK) {
             RecognizeService.recognizeIDCard(activityInstance, FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), IDCardParams.ID_CARD_SIDE_BACK, new RecognizeService.ServiceListener() {
                 @Override
                 public void onResult(String result) {
-                    DialogHelper.getMessageDialog(activityInstance, result).show();
+                    final String text = result;
+                    DialogHelper.getConfirmDialog(activityInstance, result, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //创建ClipData对象
+                            ClipData clipData = ClipData.newPlainText("text copy", text);
+                            //添加ClipData对象到剪切板中
+                            cm.setPrimaryClip(clipData);
+                            Toast.makeText(activityInstance,R.string.copy_text,Toast.LENGTH_SHORT).show();
+                        }
+                    }).show();
                 }
             });
         } else if (requestCode == REQUEST_CODE_QRCODE && resultCode == RESULT_OK) {
             RecognizeService.recQrcode(activityInstance, FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), new RecognizeService.ServiceListener() {
                 @Override
                 public void onResult(String result) {
-                    DialogHelper.getMessageDialog(activityInstance, result).show();
+                    final String text = result;
+                    DialogHelper.getConfirmDialog(activityInstance, result, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //创建ClipData对象
+                            ClipData clipData = ClipData.newPlainText("text copy", text);
+                            //添加ClipData对象到剪切板中
+                            cm.setPrimaryClip(clipData);
+                            Toast.makeText(activityInstance,R.string.copy_text,Toast.LENGTH_SHORT).show();
+                        }
+                    }).show();
                 }
             });
         } else if (requestCode == REQUEST_CODE_ZXING_QRCODE && resultCode == RESULT_OK) {
@@ -258,7 +322,17 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    DialogHelper.getMessageDialog(activityInstance, "解析结果:" + result).show();
+                    final String text = result;
+                    DialogHelper.getConfirmDialog(activityInstance, result, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //创建ClipData对象
+                            ClipData clipData = ClipData.newPlainText("text copy", text);
+                            //添加ClipData对象到剪切板中
+                            cm.setPrimaryClip(clipData);
+                            Toast.makeText(activityInstance,R.string.copy_text,Toast.LENGTH_SHORT).show();
+                        }
+                    }).show();
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     DialogHelper.getMessageDialog(activityInstance, "解析失败").show();
                 }
@@ -269,7 +343,17 @@ public class MainActivity extends AppCompatActivity {
                 CodeUtils.analyzeBitmap(ImageUtils.getImageAbsolutePath(this, uri), new CodeUtils.AnalyzeCallback() {
                     @Override
                     public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-                        DialogHelper.getMessageDialog(activityInstance, "解析结果：" + result).show();
+                        final String text = result;
+                        DialogHelper.getConfirmDialog(activityInstance, result, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //创建ClipData对象
+                                ClipData clipData = ClipData.newPlainText("text copy", text);
+                                //添加ClipData对象到剪切板中
+                                cm.setPrimaryClip(clipData);
+                                Toast.makeText(activityInstance,R.string.copy_text,Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
                     }
 
                     @Override

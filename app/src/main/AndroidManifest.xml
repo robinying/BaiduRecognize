@@ -94,7 +94,8 @@
                 <category android:name="com.baidu.speech.yubincategory" />
             </intent-filter>
         </activity>
-        <activity android:name=".tts.TtsActivity"></activity>
+        <activity android:name=".tts.TtsActivity" />
+        <activity android:name=".tts.SaveFileActivity"></activity>
     </application>
 
 </manifest>

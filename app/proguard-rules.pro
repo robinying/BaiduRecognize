@@ -23,3 +23,14 @@
 #百度云文字识别
 -keep class com.baidu.ocr.sdk.**{*;}
 -dontwarn com.baidu.ocr.**
+
+#百度云语音识别
+-keep class com.baidu.speech.**{*;}
+-dontwarn com.baidu.speech.**
+
+
+#百度语音合成
+-keep class com.baidu.synthesizer.**{*;}
+-keep class com.baidu.tts.**{*;}
+-dontwarn com.baidu.tts.**
+-dontwarn com.baidu.synthesizer.**

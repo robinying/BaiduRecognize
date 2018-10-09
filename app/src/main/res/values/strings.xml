@@ -9,6 +9,7 @@
     <string name="button7_text">zxing图片二维码识别</string>
     <string name="button8_text">百度语音识别</string>
     <string name="button9_text">百度语音合成</string>
+    <string name="button10_text">百度语音合成(保存文件)</string>
 
 
     <string name="please_speak">请说话</string>
@@ -81,4 +82,5 @@
         <item>2230, 毫秒，请修改代码中的VAD_ENDPOINT_TIMEOUT，自定义时长（建议800ms-3000ms之间）</item>
     </string-array>
     <string name="main_title">功能列表</string>
+    <string name="copy_text">已复制到剪贴板</string>
 </resources>

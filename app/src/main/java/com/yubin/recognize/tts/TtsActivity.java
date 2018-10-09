@@ -68,7 +68,7 @@ public class TtsActivity extends AppCompatActivity {
     @BindView(R.id.showText)
     TextView showText;
     private Button[] buttons;
-    private Handler mainHandler;
+    protected Handler mainHandler;
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
     protected TtsMode ttsMode = TtsMode.MIX;
 
